@@ -165,14 +165,24 @@ public let DataBenchmarks = [
     runFunction: { string($0*200, from: mediumData) }, tags: d,
     legacyFactor: 50),
 
-  BenchmarkInfo(name: "StringToDataEmpty",
-    runFunction: { data($0*200, from: emptyString) }, tags: d,
+  BenchmarkInfo(name: "StringToDataUsingUTF8ViewEmpty",
+    runFunction: { dataUsingUTF8View($0*200, from: emptyString) }, tags: d,
     legacyFactor: 50),
-  BenchmarkInfo(name: "StringToDataSmall",
-    runFunction: { data($0*200, from: smallString) }, tags: d,
+  BenchmarkInfo(name: "StringToDataUsingUTF8ViewSmall",
+    runFunction: { dataUsingUTF8View($0*200, from: smallString) }, tags: d,
     legacyFactor: 50),
-  BenchmarkInfo(name: "StringToDataMedium",
-    runFunction: { data($0*200, from: mediumString) }, tags: d,
+  BenchmarkInfo(name: "StringToDataUsingUTF8ViewMedium",
+    runFunction: { dataUsingUTF8View($0*200, from: mediumString) }, tags: d,
+    legacyFactor: 50),
+
+  BenchmarkInfo(name: "StringToDataUsingUTF8EncodingEmpty",
+    runFunction: { dataUsingUTF8Encoding($0*200, from: emptyString) }, tags: d,
+    legacyFactor: 50),
+  BenchmarkInfo(name: "StringToDataUsingUTF8EncodingSmall",
+    runFunction: { dataUsingUTF8Encoding($0*200, from: smallString) }, tags: d,
+    legacyFactor: 50),
+  BenchmarkInfo(name: "StringToDataUsingUTF8EncodingMedium",
+    runFunction: { dataUsingUTF8Encoding($0*200, from: mediumString) }, tags: d,
     legacyFactor: 50),
 
   BenchmarkInfo(name: "Data.hash.Empty",
@@ -388,9 +398,16 @@ public func string(_ N: Int, from data: Data) {
 }
 
 @inline(never)
-public func data(_ N: Int, from string: String) {
+public func dataUsingUTF8View(_ N: Int, from string: String) {
   for _ in 1...N {
     blackHole(Data(string.utf8))
+  }
+}
+
+@inline(never)
+public func dataUsingUTF8Encoding(_ N: Int, from string: String) {
+  for _ in 1...N {
+    blackHole(string.data(using: .utf8))
   }
 }
 
